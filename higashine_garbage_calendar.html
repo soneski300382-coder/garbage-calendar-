@@ -1,188 +1,196 @@
-
-<h2 class="sr-only">東根市ごみ収集日カレンダー（もやせるごみ地区・水土）</h2>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ごみの日</title>
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
-  --shigen: #2563eb;
-  --pet: #16a34a;
-  --plastic: #d97706;
-  --moyanai: #7c3aed;
-  --koshi: #be185d;
+  --bg: #f0eff4;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --text2: #6e6e8a;
+  --radius: 16px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); }
-.wrap { padding: 1rem 0 2rem; }
-.header { margin-bottom: 1.5rem; }
-.header h1 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
-.header p { font-size: 13px; color: var(--color-text-secondary); }
-.today-banner { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
-.today-banner .label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-.today-next { display: flex; flex-wrap: wrap; gap: 8px; }
-.next-item { display: flex; align-items: center; gap: 6px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 6px 10px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.next-item .kind { font-size: 13px; color: var(--color-text-secondary); }
-.next-item .date { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
-.next-item .days-left { font-size: 11px; color: var(--color-text-secondary); margin-left: 2px; }
-.month-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
-.month-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
-.nav-btn { background: transparent; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 4px 12px; cursor: pointer; font-size: 14px; color: var(--color-text-secondary); }
-.nav-btn:hover { background: var(--color-background-secondary); }
-.schedule-list { display: flex; flex-direction: column; gap: 6px; }
-.sched-item { display: flex; align-items: center; gap: 12px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; }
-.sched-item.today-hl { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
-.sched-date { font-size: 22px; font-weight: 500; color: var(--color-text-primary); min-width: 36px; }
-.sched-day { font-size: 11px; color: var(--color-text-secondary); min-width: 20px; }
-.sched-kinds { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
-.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 8px; border-radius: 99px; font-weight: 500; }
-.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; padding-top: 1rem; border-top: 0.5px solid var(--color-border-tertiary); }
-.legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-secondary); }
-.notice { margin-top: 1rem; font-size: 12px; color: var(--color-text-secondary); background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; border-left: 3px solid #e24b4a; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0f0f1a; --card: #1a1a2e; --text: #e8e8f0; --text2: #8888aa; }
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+  min-height: 100vh;
+  padding: 0 0 5rem;
+}
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--bg);
+  padding: 1rem 1rem 0.5rem;
+}
+.topbar h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+.topbar p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.next-section { padding: 0.75rem 1rem 0; }
+.section-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--text2); text-transform: uppercase; margin-bottom: 8px;
+}
+.next-scroll {
+  display: flex; gap: 8px; overflow-x: auto;
+  padding-bottom: 4px; scrollbar-width: none;
+}
+.next-scroll::-webkit-scrollbar { display: none; }
+.next-chip {
+  flex-shrink: 0; display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+  background: var(--card); border-radius: 14px;
+  padding: 10px 14px; min-width: 80px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+}
+.chip-kind { font-size: 11px; font-weight: 600; color: var(--text2); }
+.chip-date { font-size: 16px; font-weight: 700; color: var(--text); }
+.chip-left { font-size: 10px; color: var(--text2); }
+.month-nav {
+  display: flex; align-items: center;
+  padding: 1rem 1rem 0.5rem; gap: 0;
+}
+.nav-btn {
+  background: var(--card); border: none; border-radius: 50%;
+  width: 36px; height: 36px; font-size: 20px; color: var(--text2);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.nav-btn:active { opacity: 0.6; transform: scale(0.92); }
+.month-title { flex: 1; text-align: center; font-size: 17px; font-weight: 700; }
+.list { padding: 0 1rem; display: flex; flex-direction: column; gap: 8px; }
+.day-card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 14px 16px; display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.day-card.is-today { box-shadow: 0 0 0 2.5px #3b82f6, 0 2px 8px rgba(0,0,0,0.08); }
+.day-num { font-size: 28px; font-weight: 800; min-width: 42px; line-height: 1; letter-spacing: -1px; }
+.day-name { font-size: 11px; color: var(--text2); font-weight: 500; min-width: 16px; }
+.day-kinds { display: flex; flex-wrap: wrap; gap: 5px; flex: 1; }
+.badge {
+  font-size: 12px; font-weight: 600; padding: 4px 10px;
+  border-radius: 99px; display: inline-flex; align-items: center; gap: 4px;
+}
+.bdot { width: 6px; height: 6px; border-radius: 50%; }
+.legend {
+  margin: 1.5rem 1rem 0; background: var(--card);
+  border-radius: var(--radius); padding: 14px 16px;
+  display: flex; flex-wrap: wrap; gap: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text2); font-weight: 500; }
+.notice {
+  margin: 0.75rem 1rem 0; background: #fff1f1;
+  border-radius: var(--radius); padding: 12px 14px;
+  font-size: 12px; color: #b91c1c; line-height: 1.6; font-weight: 500;
+}
+@media (prefers-color-scheme: dark) {
+  .notice { background: #2d0d0d; color: #f87171; }
+}
+.empty { text-align: center; color: var(--text2); font-size: 14px; padding: 2rem 0; }
 </style>
-
-<div class="wrap">
-  <div class="header">
-    <h1>東根市 ごみ収集日</h1>
-    <p>もやせるごみ地区（水・土）</p>
-  </div>
-
-  <div class="today-banner">
-    <div class="label">次の収集日</div>
-    <div class="today-next" id="next-dates"></div>
-  </div>
-
-  <div class="month-nav">
-    <button class="nav-btn" onclick="changeMonth(-1)">&#8592;</button>
-    <div class="month-title" id="month-title"></div>
-    <button class="nav-btn" onclick="changeMonth(1)">&#8594;</button>
-  </div>
-
-  <div class="schedule-list" id="schedule-list"></div>
-
-  <div class="legend">
-    <div class="legend-item"><span class="dot" style="background:#2563eb"></span>資源物</div>
-    <div class="legend-item"><span class="dot" style="background:#16a34a"></span>ペットボトル</div>
-    <div class="legend-item"><span class="dot" style="background:#d97706"></span>プラスチック容器</div>
-    <div class="legend-item"><span class="dot" style="background:#7c3aed"></span>もやせないごみ</div>
-    <div class="legend-item"><span class="dot" style="background:#be185d"></span>古紙・布類</div>
-  </div>
-
-  <div class="notice">⚠ もやせるごみは祝日も収集しますが、5/3〜5/5・1/1〜1/3は収集しません。</div>
+</head>
+<body>
+<div class="topbar">
+  <h1>🗑 ごみの日</h1>
+  <p>東根市・もやせるごみ地区（水・土）</p>
 </div>
-
+<div class="next-section">
+  <div class="section-label">次の収集日</div>
+  <div class="next-scroll" id="next-scroll"></div>
+</div>
+<div class="month-nav">
+  <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+  <div class="month-title" id="month-title"></div>
+  <button class="nav-btn" onclick="changeMonth(1)">›</button>
+</div>
+<div class="list" id="list"></div>
+<div class="legend">
+  <div class="legend-item"><span class="bdot" style="background:#3b82f6"></span>資源物</div>
+  <div class="legend-item"><span class="bdot" style="background:#10b981"></span>ペットボトル</div>
+  <div class="legend-item"><span class="bdot" style="background:#f59e0b"></span>プラスチック容器</div>
+  <div class="legend-item"><span class="bdot" style="background:#8b5cf6"></span>もやせないごみ</div>
+  <div class="legend-item"><span class="bdot" style="background:#ec4899"></span>古紙・布類</div>
+</div>
+<div class="notice">⚠ もやせるごみは祝日も収集しますが、5/3〜5/5・1/1〜1/3は収集しません。</div>
 <script>
 const SCHEDULE = {
-  4:  { shigen:[3,17], pet:[14], plastic:[13,27], moyanai:[7,30], koshi:[21] },
-  5:  { shigen:[1,15], pet:[12], plastic:[11,25], moyanai:[],     koshi:[19] },
-  6:  { shigen:[5,19], pet:[9],  plastic:[8,22],  moyanai:[2],    koshi:[16] },
-  7:  { shigen:[3,17], pet:[14,28], plastic:[13,27], moyanai:[7], koshi:[21] },
-  8:  { shigen:[7,21], pet:[11,25], plastic:[10,24], moyanai:[4], koshi:[18] },
-  9:  { shigen:[4,18], pet:[8,22],  plastic:[14,28], moyanai:[1], koshi:[15] },
-  10: { shigen:[2,16], pet:[13],    plastic:[12,26], moyanai:[6], koshi:[20] },
-  11: { shigen:[6,20], pet:[10],    plastic:[9,23],  moyanai:[3], koshi:[17] },
-  12: { shigen:[4,18,29], pet:[8],  plastic:[9,23],  moyanai:[1], koshi:[15] },
-  1:  { shigen:[15],  pet:[12],    plastic:[14,28], moyanai:[1], koshi:[19] },
-  2:  { shigen:[5,19], pet:[9],    plastic:[11,25], moyanai:[5], koshi:[16] },
-  3:  { shigen:[5,19], pet:[9],    plastic:[8,22],  moyanai:[2], koshi:[16] },
+  4:{shigen:[3,17],pet:[14],plastic:[13,27],moyanai:[7,30],koshi:[21]},
+  5:{shigen:[1,15],pet:[12],plastic:[11,25],moyanai:[],koshi:[19]},
+  6:{shigen:[5,19],pet:[9],plastic:[8,22],moyanai:[2],koshi:[16]},
+  7:{shigen:[3,17],pet:[14,28],plastic:[13,27],moyanai:[7],koshi:[21]},
+  8:{shigen:[7,21],pet:[11,25],plastic:[10,24],moyanai:[4],koshi:[18]},
+  9:{shigen:[4,18],pet:[8,22],plastic:[14,28],moyanai:[1],koshi:[15]},
+  10:{shigen:[2,16],pet:[13],plastic:[12,26],moyanai:[6],koshi:[20]},
+  11:{shigen:[6,20],pet:[10],plastic:[9,23],moyanai:[3],koshi:[17]},
+  12:{shigen:[4,18,29],pet:[8],plastic:[9,23],moyanai:[1],koshi:[15]},
+  1:{shigen:[15],pet:[12],plastic:[14,28],moyanai:[1],koshi:[19]},
+  2:{shigen:[5,19],pet:[9],plastic:[11,25],moyanai:[5],koshi:[16]},
+  3:{shigen:[5,19],pet:[9],plastic:[8,22],moyanai:[2],koshi:[16]},
 };
-
-const KINDS = [
-  { key:'shigen',  label:'資源物',        color:'#2563eb', bg:'#dbeafe' },
-  { key:'pet',     label:'ペットボトル',   color:'#16a34a', bg:'#dcfce7' },
-  { key:'plastic', label:'プラスチック容器', color:'#d97706', bg:'#fef3c7' },
-  { key:'moyanai', label:'もやせないごみ', color:'#7c3aed', bg:'#ede9fe' },
-  { key:'koshi',   label:'古紙・布類',     color:'#be185d', bg:'#fce7f3' },
+const KINDS=[
+  {key:'shigen',label:'資源物',color:'#3b82f6',bg:'#eff6ff'},
+  {key:'pet',label:'ペットボトル',color:'#10b981',bg:'#ecfdf5'},
+  {key:'plastic',label:'プラスチック容器',color:'#f59e0b',bg:'#fffbeb'},
+  {key:'moyanai',label:'もやせないごみ',color:'#8b5cf6',bg:'#f5f3ff'},
+  {key:'koshi',label:'古紙・布類',color:'#ec4899',bg:'#fdf2f8'},
 ];
+const DAYS=['日','月','火','水','木','金','土'];
+const today=new Date();today.setHours(0,0,0,0);
+let viewYear=today.getFullYear(),viewMonth=today.getMonth()+1;
 
-const DAYS = ['日','月','火','水','木','金','土'];
-
-const today = new Date(2026, 4, 28);
-let viewYear = today.getFullYear();
-let viewMonth = today.getMonth() + 1;
-
-function fiscalMonth(m) {
-  return m >= 4 ? m - 3 : m + 9;
-}
-
-function getDates(year, month) {
-  const data = SCHEDULE[month] || {};
-  const allDates = [];
-  for (const k of KINDS) {
-    for (const d of (data[k.key] || [])) {
-      const date = new Date(year, month - 1, d);
-      allDates.push({ day: d, date, kind: k });
-    }
+function getDates(y,m){
+  const data=SCHEDULE[m]||{},byDay={};
+  for(const k of KINDS)for(const d of(data[k.key]||[])){
+    if(!byDay[d])byDay[d]={day:d,date:new Date(y,m-1,d),kinds:[]};
+    byDay[d].kinds.push(k);
   }
-  allDates.sort((a, b) => a.day - b.day || 0);
-  const byDay = {};
-  for (const item of allDates) {
-    if (!byDay[item.day]) byDay[item.day] = { day: item.day, date: item.date, kinds: [] };
-    byDay[item.day].kinds.push(item.kind);
-  }
-  return Object.values(byDay).sort((a,b) => a.day - b.day);
+  return Object.values(byDay).sort((a,b)=>a.day-b.day);
 }
-
-function renderMonth() {
-  document.getElementById('month-title').textContent = viewYear + '年 ' + viewMonth + '月';
-  const list = getDates(viewYear, viewMonth);
-  const el = document.getElementById('schedule-list');
-  el.innerHTML = '';
-  for (const item of list) {
-    const div = document.createElement('div');
-    div.className = 'sched-item';
-    const isToday = item.date.getFullYear() === today.getFullYear() && item.date.getMonth() === today.getMonth() && item.date.getDate() === today.getDate();
-    if (isToday) div.classList.add('today-hl');
-    const dayName = DAYS[item.date.getDay()];
-    const badges = item.kinds.map(k =>
-      `<span class="badge" style="background:${k.bg};color:${k.color}"><span class="dot" style="background:${k.color}"></span>${k.label}</span>`
-    ).join('');
-    div.innerHTML = `<div class="sched-date">${item.day}</div><div class="sched-day">(${dayName})</div><div class="sched-kinds">${badges}</div>`;
+function renderMonth(){
+  document.getElementById('month-title').textContent=viewYear+'年 '+viewMonth+'月';
+  const el=document.getElementById('list');el.innerHTML='';
+  const list=getDates(viewYear,viewMonth);
+  if(!list.length){el.innerHTML='<div class="empty">収集日なし</div>';return;}
+  for(const item of list){
+    const isToday=item.date.getTime()===today.getTime();
+    const div=document.createElement('div');
+    div.className='day-card'+(isToday?' is-today':'');
+    const badges=item.kinds.map(k=>`<span class="badge" style="background:${k.bg};color:${k.color}"><span class="bdot" style="background:${k.color}"></span>${k.label}</span>`).join('');
+    div.innerHTML=`<div class="day-num">${item.day}</div><div class="day-name">${DAYS[item.date.getDay()]}</div><div class="day-kinds">${badges}</div>`;
     el.appendChild(div);
   }
 }
-
-function renderNext() {
-  const el = document.getElementById('next-dates');
-  el.innerHTML = '';
-  const candidates = [];
-  for (let offset = 0; offset <= 90; offset++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() + offset);
-    const m = d.getMonth() + 1;
-    const day = d.getDate();
-    const data = SCHEDULE[m] || {};
-    for (const k of KINDS) {
-      if ((data[k.key] || []).includes(day)) {
-        candidates.push({ d, day, m, kind: k, offset });
-      }
+function renderNext(){
+  const el=document.getElementById('next-scroll');el.innerHTML='';
+  const seen=new Set(),shown=[];
+  for(let offset=0;offset<=90&&seen.size<5;offset++){
+    const d=new Date(today);d.setDate(d.getDate()+offset);
+    const m=d.getMonth()+1,day=d.getDate(),data=SCHEDULE[m]||{};
+    for(const k of KINDS)if(!seen.has(k.key)&&(data[k.key]||[]).includes(day)){
+      seen.add(k.key);shown.push({d,day,m,kind:k,offset});
     }
-    if (candidates.length >= 5) break;
   }
-  const seen = new Set();
-  const shown = [];
-  for (const c of candidates) {
-    if (!seen.has(c.kind.key)) {
-      seen.add(c.kind.key);
-      shown.push(c);
-    }
-    if (seen.size >= 5) break;
-  }
-  shown.sort((a,b) => a.offset - b.offset);
-  for (const c of shown) {
-    const dayLabel = c.offset === 0 ? '今日' : c.offset === 1 ? '明日' : c.offset + '日後';
-    const div = document.createElement('div');
-    div.className = 'next-item';
-    div.innerHTML = `<span class="dot" style="background:${c.kind.color}"></span><span class="kind">${c.kind.label}</span><span class="date">${c.m}/${c.day}</span><span class="days-left">${dayLabel}</span>`;
+  shown.sort((a,b)=>a.offset-b.offset);
+  for(const c of shown){
+    const label=c.offset===0?'今日':c.offset===1?'明日':c.offset+'日後';
+    const div=document.createElement('div');div.className='next-chip';
+    div.innerHTML=`<span class="bdot" style="background:${c.kind.color}"></span><span class="chip-kind">${c.kind.label}</span><span class="chip-date">${c.m}/${c.day}</span><span class="chip-left">${label}</span>`;
     el.appendChild(div);
   }
 }
-
-function changeMonth(dir) {
-  viewMonth += dir;
-  if (viewMonth > 12) { viewMonth = 1; viewYear++; }
-  if (viewMonth < 1) { viewMonth = 12; viewYear--; }
+function changeMonth(dir){
+  viewMonth+=dir;
+  if(viewMonth>12){viewMonth=1;viewYear++;}
+  if(viewMonth<1){viewMonth=12;viewYear--;}
   renderMonth();
 }
-
-renderNext();
-renderMonth();
+renderNext();renderMonth();
 </script>
+</body>
+</html>
