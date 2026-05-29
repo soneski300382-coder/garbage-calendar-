@@ -32,9 +32,12 @@ body {
   display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap;
 }
 .topbar h1 .sub { font-size: 0.75rem; font-weight: 400; color: var(--text2); }
-.today-bar { margin-top: 8px; display: flex; align-items: center; gap: 10px; }
-.today-label { font-size: 0.78rem; color: var(--text2); font-weight: 400; }
-.today-year { font-size: 0.72rem; color: var(--text2); font-weight: 400; }
+.today-bar { margin-top: 8px; display: flex; align-items: baseline; gap: 6px; flex-wrap: nowrap; overflow: hidden; }
+.today-label { font-size: 0.78rem; color: var(--text2); font-weight: 400; white-space: nowrap; }
+.today-year { font-size: 0.72rem; color: var(--text2); font-weight: 400; white-space: nowrap; }
+.today-date { font-size: 1.3rem; font-weight: 700; color: var(--text); white-space: nowrap; }
+.today-day { font-size: 1.3rem; color: var(--text); font-weight: 700; white-space: nowrap; }
+.moeru-badge { white-space: nowrap; margin-left: auto; flex-shrink: 0; }
 .today-date { font-size: 1.3rem; font-weight: 700; color: var(--text); }
 .today-day { font-size: 1.3rem; color: var(--text); font-weight: 700; }
 .moeru-badge {
