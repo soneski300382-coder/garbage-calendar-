@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ごみ回収カレンダー</title>
+<title>ごみ回収</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
@@ -33,6 +33,7 @@ body {
 }
 .topbar h1 .sub { font-size: 0.75rem; font-weight: 400; color: var(--text2); }
 .today-bar { margin-top: 8px; display: flex; align-items: center; gap: 10px; }
+.today-label { font-size: 0.78rem; color: var(--text2); font-weight: 400; }
 .today-year { font-size: 0.72rem; color: var(--text2); font-weight: 400; }
 .today-date { font-size: 1.3rem; font-weight: 700; color: var(--text); }
 .today-day { font-size: 1.3rem; color: var(--text); font-weight: 700; }
@@ -159,8 +160,9 @@ body {
 </head>
 <body>
 <div class="topbar">
-  <h1>🗑 ごみ回収カレンダー <span class="sub">(令和８年度 小田島地区)</span></h1>
+  <h1>🗑 ごみ回収 <span class="sub">(令和８年度 小田島地区)</span></h1>
   <div class="today-bar">
+    <span class="today-label">今日は</span>
     <span class="today-year" id="today-year"></span>
     <span class="today-date" id="today-date"></span>
     <span class="today-day" id="today-dayname"></span>
@@ -283,13 +285,13 @@ const SCHEDULE={
   3:{shigen:[5,19],pet:[9],plastic:[8,22],moyanai:[2],koshi:[16]},
 };
 const KINDS=[
-  {key:'shigen',label:'資源物',color:'#60a5fa',bg:'#1e3a5f'},
-  {key:'pet',label:'ペットボトル',color:'#60a5fa',bg:'#1e3a5f'},
-  {key:'plastic',label:'プラスチック容器',color:'#fb923c',bg:'#431407'},
-  {key:'moyanai',label:'もやせないごみ',color:'#4ade80',bg:'#064e3b'},
-  {key:'koshi',label:'古紙・布類',color:'#f472b6',bg:'#500724'},
+  {key:'shigen',label:'資源物',color:'#2563eb',bg:'#1e3a5f'},
+  {key:'pet',label:'ペットボトル',color:'#2563eb',bg:'#1e3a5f'},
+  {key:'plastic',label:'プラスチック容器',color:'#ea6000',bg:'#431407'},
+  {key:'moyanai',label:'もやせないごみ',color:'#16a34a',bg:'#064e3b'},
+  {key:'koshi',label:'古紙・布類',color:'#db2777',bg:'#500724'},
 ];
-const MOERU={color:'#f87171',bg:'#2d0d0d',label:'もやせるごみ'};
+const MOERU={color:'#dc2626',bg:'#2d0d0d',label:'もやせるごみ'};
 const DAYS=['日','月','火','水','木','金','土'];
 const DAYS_FULL=['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'];
 const today=new Date();today.setHours(0,0,0,0);
@@ -333,7 +335,8 @@ function renderNext(){
   for(const c of shown){
     const label=c.offset===0?'今日':c.offset===1?'明日':c.offset+'日後';
     const div=document.createElement('div');div.className='next-chip';
-    div.innerHTML=`<span class="chip-kind" style="color:${c.kind.color}">${c.kind.label}</span><span class="chip-date">${c.m}/${c.day}</span><span class="chip-left">${label}</span>`;
+    div.innerHTML=`<span class="chip-kind" style="color:rgba(255,255,255,0.8)">${c.kind.label}</span><span class="chip-date">${c.m}/${c.day}</span><span class="chip-left">${label}</span>`;
+    div.style.background=c.kind.color;
     el.appendChild(div);
   }
 }
