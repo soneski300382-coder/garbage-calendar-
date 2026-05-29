@@ -33,8 +33,9 @@ body {
 }
 .topbar h1 .sub { font-size: 0.75rem; font-weight: 400; color: var(--text2); }
 .today-bar { margin-top: 8px; display: flex; align-items: center; gap: 10px; }
-.today-date { font-size: 1rem; font-weight: 700; color: var(--text); }
-.today-day { font-size: 0.78rem; color: var(--text2); }
+.today-year { font-size: 0.72rem; color: var(--text2); font-weight: 400; }
+.today-date { font-size: 1.3rem; font-weight: 700; color: var(--text); }
+.today-day { font-size: 1.3rem; color: var(--text); font-weight: 700; }
 .moeru-badge {
   margin-left: auto;
   display: inline-flex; align-items: center; gap: 5px;
@@ -44,23 +45,31 @@ body {
 }
 .bdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
-.next-section { padding: 0.75rem 1rem 0; }
+.next-section {
+  padding: 0.75rem 1rem 0;
+}
+.next-card {
+  background: #ffffff;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
 .section-label {
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
-  color: var(--text2); text-transform: uppercase; margin-bottom: 10px;
+  font-size: 1rem; font-weight: 700; letter-spacing: 0.05em;
+  color: #1a1a2e;
+  text-align: center; margin-bottom: 12px;
 }
 .next-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
 .next-scroll::-webkit-scrollbar { display: none; }
 .next-chip {
   flex-shrink: 0; display: flex; flex-direction: column;
   align-items: center; gap: 5px;
-  background: var(--card); border-radius: 16px;
-  padding: 14px 18px; min-width: 96px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  background: #1a1a2e; border-radius: 12px;
+  padding: 12px 16px; min-width: 90px;
 }
-.chip-kind { font-size: 0.72rem; font-weight: 600; color: var(--text2); }
-.chip-date { font-size: 1.15rem; font-weight: 700; color: var(--text); }
-.chip-left { font-size: 0.68rem; color: var(--text2); }
+.chip-kind { font-size: 0.82rem; font-weight: 700; }
+.chip-date { font-size: 1.25rem; font-weight: 700; color: #ffffff; }
+.chip-left { font-size: 0.82rem; font-weight: 600; color: #ffffff; }
 
 .month-nav { display: flex; align-items: center; padding: 1rem 1rem 0.6rem; }
 .nav-btn {
@@ -79,13 +88,14 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,0.25);
 }
 .day-card.is-today { box-shadow: 0 0 0 2.5px #3b82f6, 0 2px 10px rgba(59,130,246,0.2); }
-.day-card.moeru-only { background: #141f14; }
+.day-card.moeru-only { background: var(--card); }
 .day-num { font-size: 2rem; font-weight: 800; min-width: 52px; line-height: 1; letter-spacing: -1px; color: var(--text); }
 .day-name { font-size: 0.78rem; color: var(--text2); font-weight: 500; min-width: 20px; }
 .day-kinds { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
 .badge {
-  font-size: 0.82rem; font-weight: 600; padding: 5px 12px;
-  border-radius: 99px; display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.82rem; font-weight: 700; padding: 2px 4px;
+  display: inline-flex; align-items: center;
+  background: none !important;
 }
 
 .legend {
@@ -140,21 +150,29 @@ body {
 .item-chip.wide { grid-column: 1 / -1; }
 
 .empty { text-align: center; color: var(--text2); font-size: 0.9rem; padding: 2rem 0; }
+.spec-list { display: flex; flex-direction: column; gap: 12px; }
+.spec-item { background: #0a0a14; border-radius: 10px; padding: 12px 14px; }
+.spec-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.spec-day { font-size: 0.72rem; font-weight: 600; color: #fbbf24; margin-bottom: 5px; }
+.spec-note { font-size: 0.72rem; color: var(--text2); line-height: 1.6; }
 </style>
 </head>
 <body>
 <div class="topbar">
-  <h1>🗑 ごみ回収カレンダー <span class="sub">(東根市 小田島地区)</span></h1>
+  <h1>🗑 ごみ回収カレンダー <span class="sub">(令和８年度 小田島地区)</span></h1>
   <div class="today-bar">
+    <span class="today-year" id="today-year"></span>
     <span class="today-date" id="today-date"></span>
     <span class="today-day" id="today-dayname"></span>
-    <span class="moeru-badge"><span class="bdot" style="background:#4ade80"></span>もやせるごみ 水・土</span>
+    <span class="moeru-badge" style="background:#b91c1c;color:#ffffff">もやせるごみ 水・土</span>
   </div>
 </div>
 
 <div class="next-section">
-  <div class="section-label">次の収集日</div>
-  <div class="next-scroll" id="next-scroll"></div>
+  <div class="next-card">
+    <div class="section-label">次の収集日</div>
+    <div class="next-scroll" id="next-scroll"></div>
+  </div>
 </div>
 
 <div class="month-nav">
@@ -165,98 +183,89 @@ body {
 
 <div class="list" id="list"></div>
 
-<div class="legend">
-  <div class="legend-item"><span class="bdot" style="background:#4ade80"></span>もやせるごみ</div>
-  <div class="legend-item"><span class="bdot" style="background:#60a5fa"></span>資源物</div>
-  <div class="legend-item"><span class="bdot" style="background:#34d399"></span>ペットボトル</div>
-  <div class="legend-item"><span class="bdot" style="background:#fbbf24"></span>プラスチック容器</div>
-  <div class="legend-item"><span class="bdot" style="background:#a78bfa"></span>もやせないごみ</div>
-  <div class="legend-item"><span class="bdot" style="background:#f472b6"></span>古紙・布類</div>
-</div>
 
-<div class="notice">⚠ もやせるごみは祝日も収集しますが、5/3〜5/5・1/1〜1/3は収集しません。</div>
 
 <div class="accordion" id="moeru-acc">
-  <div class="accordion-header" onclick="toggleAcc()">
-    <div class="accordion-title">♻ これももやせるごみです</div>
+  <div class="accordion-header" onclick="toggleAcc('moeru-acc')">
+    <div class="accordion-title" style="color:#f87171">♻ これももやせるごみです</div>
     <div class="accordion-arrow">▼</div>
   </div>
   <div class="accordion-body">
     <div class="items-grid">
-      <div class="item-chip">
-        <div class="item-name">ペット砂</div>
-        <div class="item-note">紙製・木質のものに限る。それ以外はクリーンピア共立へ自己搬入</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">マッチ・花火</div>
-        <div class="item-note">水につけてから出す</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">デスクマット・電気毛布</div>
-        <div class="item-note">裁断して出す。電気毛布のコードは取り外してもやせないごみへ</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">グローブ・ボール</div>
-        <div class="item-note">ゴルフボールはもやせないごみへ</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">ベルト</div>
-        <div class="item-note">金属部分はもやせないごみへ</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">汚れた発泡スチロール</div>
-        <div class="item-note">きれいなものはプラスチック製容器包装類へ</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">乾燥剤</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">保冷剤</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">使い捨てカイロ</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">ローソク</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">ストロー</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">PPバンド</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">タッパー</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">シリコーン製品</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">長靴</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">雨ガッパ</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">リュックサック・ランドセル</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">ビーズクッション</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">浮き輪・ビニールプール</div>
-      </div>
-      <div class="item-chip">
-        <div class="item-name">カード類</div>
-        <div class="item-note">キャッシュカードなど</div>
-      </div>
-      <div class="item-chip wide">
-        <div class="item-name">在宅医療廃棄物</div>
-        <div class="item-note">栄養剤や点滴のバッグ、吸入器など。プラマークがついていてももやせるごみに出してよい。注射針などは医療機関等へ相談</div>
-      </div>
+      <div class="item-chip"><div class="item-name">ペット砂</div><div class="item-note">紙製・木質のものに限る。それ以外はクリーンピア共立へ自己搬入</div></div>
+      <div class="item-chip"><div class="item-name">マッチ・花火</div><div class="item-note">水につけてから出す</div></div>
+      <div class="item-chip"><div class="item-name">デスクマット・電気毛布</div><div class="item-note">裁断して出す。電気毛布のコードは取り外してもやせないごみへ</div></div>
+      <div class="item-chip"><div class="item-name">グローブ・ボール</div><div class="item-note">ゴルフボールはもやせないごみへ</div></div>
+      <div class="item-chip"><div class="item-name">ベルト</div><div class="item-note">金属部分はもやせないごみへ</div></div>
+      <div class="item-chip"><div class="item-name">汚れた発泡スチロール</div><div class="item-note">きれいなものはプラスチック製容器包装類へ</div></div>
+      <div class="item-chip"><div class="item-name">乾燥剤</div></div>
+      <div class="item-chip"><div class="item-name">保冷剤</div></div>
+      <div class="item-chip"><div class="item-name">使い捨てカイロ</div></div>
+      <div class="item-chip"><div class="item-name">ローソク</div></div>
+      <div class="item-chip"><div class="item-name">ストロー</div></div>
+      <div class="item-chip"><div class="item-name">PPバンド</div></div>
+      <div class="item-chip"><div class="item-name">タッパー</div></div>
+      <div class="item-chip"><div class="item-name">シリコーン製品</div></div>
+      <div class="item-chip"><div class="item-name">長靴</div></div>
+      <div class="item-chip"><div class="item-name">雨ガッパ</div></div>
+      <div class="item-chip"><div class="item-name">リュックサック・ランドセル</div></div>
+      <div class="item-chip"><div class="item-name">ビーズクッション</div></div>
+      <div class="item-chip"><div class="item-name">浮き輪・ビニールプール</div></div>
+      <div class="item-chip"><div class="item-name">カード類</div><div class="item-note">キャッシュカードなど</div></div>
+      <div class="item-chip wide"><div class="item-name">在宅医療廃棄物</div><div class="item-note">栄養剤や点滴のバッグ、吸入器など。プラマークがついていてももやせるごみに出してよい。注射針などは医療機関等へ相談</div></div>
     </div>
   </div>
 </div>
+
+<div class="accordion" id="special-acc">
+  <div class="accordion-header" onclick="toggleAcc('special-acc')">
+    <div class="accordion-title" style="color:#fbbf24">⚠ 特別な出し方が必要なごみ</div>
+    <div class="accordion-arrow">▼</div>
+  </div>
+  <div class="accordion-body">
+    <div class="spec-list">
+
+      <div class="spec-item">
+        <div class="spec-title">廃乾電池・水銀入り体温計</div>
+        <div class="spec-day">資源物またはもやせないごみの収集日</div>
+        <div class="spec-note">中身が見える透明な袋（指定袋の外袋でも可）で出す。指定袋の中には入れない。<br>対象：乾電池、ボタン電池、コイン電池、水銀入り体温計・温度計・血圧計<br>袋口はきちんと結ぶ。廃乾電池等はライター・小型充電式電池と同じ日に出せるが、それぞれ別の袋に入れる。</div>
+      </div>
+
+      <div class="spec-item">
+        <div class="spec-title">使用済みライター</div>
+        <div class="spec-day">資源物またはもやせないごみの収集日</div>
+        <div class="spec-note">中身が見える透明な袋で出す。中身は必ず使い切り、着火部分をテープで止める。廃乾電池・小型充電式電池と同じ日に出せるが別の袋に入れる。</div>
+      </div>
+
+      <div class="spec-item">
+        <div class="spec-title">小型充電式電池</div>
+        <div class="spec-day">資源物またはもやせないごみの収集日</div>
+        <div class="spec-note">透明な袋で出す。対象：リチウムイオン電池、ニカド電池、ニッケル水素電池、モバイルバッテリー、電子たばこ、電気シェーバー、ハンディファン、電動歯ブラシ等。端子部分にテープを貼り絶縁する。外せる部品は外して出す。</div>
+      </div>
+
+      <div class="spec-item">
+        <div class="spec-title">廃蛍光管</div>
+        <div class="spec-day">ペットボトルまたはプラスチック製容器包装類の収集日</div>
+        <div class="spec-note">新聞紙等で包んで出す。指定袋の中には入れない。対象：丸形・直管蛍光灯（1.2mまで）・電球形蛍光管。割れた蛍光管・白熱球・LED電球はもやせないごみへ。1.2mを超えるものは粗大ごみ。</div>
+      </div>
+
+      <div class="spec-item">
+        <div class="spec-title">廃食用油</div>
+        <div class="spec-day">もやせるごみの収集日</div>
+        <div class="spec-note">ペットボトルに入れて出す。家庭で使用した植物性食用油（サラダ油・てんぷら油等）・賞味期限切れの食用油。天かす等の異物はこして除く。</div>
+      </div>
+
+      <div class="spec-item">
+        <div class="spec-title">粗大ごみ</div>
+        <div class="spec-day">申し込みによる戸別収集</div>
+        <div class="spec-note">電話または市役所窓口で申し込み後、収集日が指定される。「粗大ごみ証紙」（1枚300円）を指定袋取扱店で購入し、品目別手数料分を貼って自宅前に出す。<br>申込先：東根市役所 生活環境課 生活環境係 TEL：0237-42-1111</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="notice">⚠ もやせるごみは祝日も収集しますが、5/3〜5/5・1/1〜1/3は収集しません。</div>
 
 <script>
 const SCHEDULE={
@@ -275,36 +284,25 @@ const SCHEDULE={
 };
 const KINDS=[
   {key:'shigen',label:'資源物',color:'#60a5fa',bg:'#1e3a5f'},
-  {key:'pet',label:'ペットボトル',color:'#34d399',bg:'#064e3b'},
-  {key:'plastic',label:'プラスチック容器',color:'#fbbf24',bg:'#451a03'},
-  {key:'moyanai',label:'もやせないごみ',color:'#a78bfa',bg:'#2e1065'},
+  {key:'pet',label:'ペットボトル',color:'#60a5fa',bg:'#1e3a5f'},
+  {key:'plastic',label:'プラスチック容器',color:'#fb923c',bg:'#431407'},
+  {key:'moyanai',label:'もやせないごみ',color:'#4ade80',bg:'#064e3b'},
   {key:'koshi',label:'古紙・布類',color:'#f472b6',bg:'#500724'},
 ];
-const MOERU={color:'#4ade80',bg:'#1a2e1a',label:'もやせるごみ'};
+const MOERU={color:'#f87171',bg:'#2d0d0d',label:'もやせるごみ'};
 const DAYS=['日','月','火','水','木','金','土'];
 const DAYS_FULL=['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'];
 const today=new Date();today.setHours(0,0,0,0);
 let viewYear=today.getFullYear(),viewMonth=today.getMonth()+1;
 
-document.getElementById('today-date').textContent=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
-document.getElementById('today-dayname').textContent='（'+DAYS_FULL[today.getDay()]+'）';
+document.getElementById('today-year').textContent=today.getFullYear()+'年';
+document.getElementById('today-date').textContent=(today.getMonth()+1)+'月'+today.getDate()+'日';
+document.getElementById('today-dayname').textContent='('+DAYS[today.getDay()]+')';
 
-function getWedSat(y,m){
-  const r=[];const d=new Date(y,m-1,1);
-  while(d.getMonth()===m-1){
-    if(d.getDay()===3||d.getDay()===6)r.push(new Date(d));
-    d.setDate(d.getDate()+1);
-  }
-  return r;
-}
 function getDates(y,m){
   const data=SCHEDULE[m]||{},byDay={};
-  for(const d of getWedSat(y,m)){
-    const day=d.getDate();
-    if(!byDay[day])byDay[day]={day,date:new Date(d),kinds:[],moeru:true};
-  }
   for(const k of KINDS)for(const d of(data[k.key]||[])){
-    if(!byDay[d])byDay[d]={day:d,date:new Date(y,m-1,d),kinds:[],moeru:false};
+    if(!byDay[d])byDay[d]={day:d,date:new Date(y,m-1,d),kinds:[]};
     byDay[d].kinds.push(k);
   }
   return Object.values(byDay).sort((a,b)=>a.day-b.day);
@@ -315,13 +313,8 @@ function renderMonth(){
   for(const item of getDates(viewYear,viewMonth)){
     const isToday=item.date.getTime()===today.getTime();
     const div=document.createElement('div');
-    let cls='day-card';
-    if(isToday)cls+=' is-today';
-    if(item.moeru&&item.kinds.length===0)cls+=' moeru-only';
-    div.className=cls;
-    let badges='';
-    if(item.moeru)badges+=`<span class="badge" style="background:${MOERU.bg};color:${MOERU.color}"><span class="bdot" style="background:${MOERU.color}"></span>${MOERU.label}</span>`;
-    badges+=item.kinds.map(k=>`<span class="badge" style="background:${k.bg};color:${k.color}"><span class="bdot" style="background:${k.color}"></span>${k.label}</span>`).join('');
+    div.className='day-card'+(isToday?' is-today':'');
+    let badges=item.kinds.map(k=>`<span class="badge" style="color:${k.color}">${k.label}</span>`).join('');
     div.innerHTML=`<div class="day-num">${item.day}</div><div class="day-name">${DAYS[item.date.getDay()]}</div><div class="day-kinds">${badges}</div>`;
     el.appendChild(div);
   }
@@ -340,7 +333,7 @@ function renderNext(){
   for(const c of shown){
     const label=c.offset===0?'今日':c.offset===1?'明日':c.offset+'日後';
     const div=document.createElement('div');div.className='next-chip';
-    div.innerHTML=`<span class="bdot" style="background:${c.kind.color}"></span><span class="chip-kind">${c.kind.label}</span><span class="chip-date">${c.m}/${c.day}</span><span class="chip-left">${label}</span>`;
+    div.innerHTML=`<span class="chip-kind" style="color:${c.kind.color}">${c.kind.label}</span><span class="chip-date">${c.m}/${c.day}</span><span class="chip-left">${label}</span>`;
     el.appendChild(div);
   }
 }
@@ -350,8 +343,8 @@ function changeMonth(dir){
   if(viewMonth<1){viewMonth=12;viewYear--;}
   renderMonth();
 }
-function toggleAcc(){
-  document.getElementById('moeru-acc').classList.toggle('open');
+function toggleAcc(id){
+  document.getElementById(id).classList.toggle('open');
 }
 renderNext();
 renderMonth();
